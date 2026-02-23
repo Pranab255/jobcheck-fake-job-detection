@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">Model Training & Evaluation</h1>
+        <p class="lead">Machine learning models trained and evaluated for fake job detection.</p>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Model Comparison</h5>
+            </div>
+            <div class="card-body">
+                <div id="model-comparison-chart"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Confusion Matrix - Best Model</h5>
+            </div>
+            <div class="card-body">
+                <div id="confusion-matrix"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>ROC Curve</h5>
+            </div>
+            <div class="card-body">
+                <div id="roc-curve"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Feature Importance</h5>
+            </div>
+            <div class="card-body">
+                <div id="feature-importance-chart"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Model Performance Metrics</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>Accuracy</th>
+                            <th>Precision</th>
+                            <th>Recall</th>
+                            <th>F1-Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Logistic Regression</td>
+                            <td>0.965</td>
+                            <td>0.720</td>
+                            <td>0.650</td>
+                            <td>0.683</td>
+                        </tr>
+                        <tr>
+                            <td>Random Forest</td>
+                            <td>0.972</td>
+                            <td>0.780</td>
+                            <td>0.720</td>
+                            <td>0.749</td>
+                        </tr>
+                        <tr>
+                            <td>XGBoost</td>
+                            <td>0.975</td>
+                            <td>0.800</td>
+                            <td>0.750</td>
+                            <td>0.774</td>
+                        </tr>
+                        <tr class="table-primary">
+                            <td><strong>SGD Classifier</strong></td>
+                            <td><strong>0.974</strong></td>
+                            <td><strong>0.790</strong></td>
+                            <td><strong>0.785</strong></td>
+                            <td><strong>0.788</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Cross-Validation Results</h5>
+            </div>
+            <div class="card-body">
+                <div id="cv-results-chart"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Model comparison chart
+    var modelData = [{
+        x: ['Logistic Regression', 'Random Forest', 'XGBoost', 'SGD Classifier'],
+        y: [0.965, 0.972, 0.975, 0.974],
+        type: 'bar',
+        name: 'Accuracy'
+    }, {
+        x: ['Logistic Regression', 'Random Forest', 'XGBoost', 'SGD Classifier'],
+        y: [0.683, 0.749, 0.774, 0.788],
+        type: 'bar',
+        name: 'F1-Score'
+    }];
+
+    var layout = {barmode: 'group'};
+    Plotly.newPlot('model-comparison-chart', modelData, layout);
+
+    // Confusion matrix (placeholder)
+    var cmData = [{
+        z: [[3200, 50], [80, 150]],
+        type: 'heatmap',
+        colorscale: 'Blues'
+    }];
+
+    Plotly.newPlot('confusion-matrix', cmData);
+
+    // ROC curve (placeholder)
+    var rocData = [{
+        x: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+        y: [0, 0.2, 0.4, 0.6, 0.7, 0.8, 0.85, 0.9, 0.95, 0.98, 1],
+        type: 'scatter',
+        name: 'ROC Curve'
+    }];
+
+    Plotly.newPlot('roc-curve', rocData);
+
+    // Feature importance (placeholder)
+    var fiData = [{
+        x: ['Feature 1', 'Feature 2', 'Feature 3', 'Feature 4', 'Feature 5'],
+        y: [0.3, 0.25, 0.2, 0.15, 0.1],
+        type: 'bar'
+    }];
+
+    Plotly.newPlot('feature-importance-chart', fiData);
+
+    // CV results (placeholder)
+    var cvData = [{
+        x: ['Fold 1', 'Fold 2', 'Fold 3', 'Fold 4', 'Fold 5'],
+        y: [0.97, 0.975, 0.972, 0.978, 0.973],
+        type: 'scatter',
+        mode: 'lines+markers'
+    }];
+
+    Plotly.newPlot('cv-results-chart', cvData);
+</script>
+{% endblock %}

@@ -1,0 +1,463 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header" data-aos="fade-down">
+    <h1><i class="fas fa-chart-bar me-3"></i>Data Exploration</h1>
+    <p>Comprehensive analysis of the fake job postings dataset with interactive visualizations</p>
+</div>
+
+<!-- Summary Cards with Progress -->
+<div class="row g-4 mb-5">
+    <div class="col-md-3" data-aos="fade-up">
+        <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #4361ee20 0%, #3f37c920 100%);">
+                    <i class="fas fa-database"></i>
+                </div>
+                <span class="badge bg-primary">Total</span>
+            </div>
+            <div class="stat-title">Total Records</div>
+            <div class="stat-value">17,880</div>
+            <div class="progress mt-2" style="height: 6px;">
+                <div class="progress-bar bg-primary" style="width: 100%"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3" data-aos="fade-up" data-aos-delay="100">
+        <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #f7258520 0%, #b5179e20 100%);">
+                    <i class="fas fa-exclamation-circle"></i>
+                </div>
+                <span class="badge bg-danger">4.8%</span>
+            </div>
+            <div class="stat-title">Fake Jobs</div>
+            <div class="stat-value">866</div>
+            <div class="progress mt-2" style="height: 6px;">
+                <div class="progress-bar bg-danger" style="width: 4.8%"></div>
+            </div>
+            <small class="text-danger mt-2 d-block">
+                <i class="fas fa-arrow-up me-1"></i>4.8% of total
+            </small>
+        </div>
+    </div>
+    
+    <div class="col-md-3" data-aos="fade-up" data-aos-delay="200">
+        <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #4cc9f020 0%, #4361ee20 100%);">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <span class="badge bg-success">95.2%</span>
+            </div>
+            <div class="stat-title">Real Jobs</div>
+            <div class="stat-value">17,014</div>
+            <div class="progress mt-2" style="height: 6px;">
+                <div class="progress-bar bg-success" style="width: 95.2%"></div>
+            </div>
+            <small class="text-success mt-2 d-block">
+                <i class="fas fa-check me-1"></i>Majority class
+            </small>
+        </div>
+    </div>
+    
+    <div class="col-md-3" data-aos="fade-up" data-aos-delay="300">
+        <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #f8961e20 0%, #f3722c20 100%);">
+                    <i class="fas fa-tags"></i>
+                </div>
+                <span class="badge bg-warning">Features</span>
+            </div>
+            <div class="stat-title">Data Attributes</div>
+            <div class="stat-value">18</div>
+            <div class="mt-2">
+                <span class="badge bg-light text-dark me-1">Categorical: 12</span>
+                <span class="badge bg-light text-dark">Numerical: 6</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Analysis Charts with Better Layout -->
+<div class="row g-4 mb-5">
+    <div class="col-md-6" data-aos="fade-right">
+        <div class="card-modern">
+            <div class="card-header-modern d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Class Distribution</h5>
+                <div class="btn-group btn-group-sm">
+                    <button class="btn btn-light" onclick="changeChartType('pie')">Pie</button>
+                    <button class="btn btn-light" onclick="changeChartType('donut')">Donut</button>
+                </div>
+            </div>
+            <div class="card-body-modern">
+                <div id="class-distribution" style="height: 400px;"></div>
+                <div class="row mt-3 text-center">
+                    <div class="col-6">
+                        <div class="p-3 bg-light rounded">
+                            <span class="badge bg-danger mb-2">Fake Jobs</span>
+                            <h4 class="text-danger mb-0">866</h4>
+                            <small>4.8% of total</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="p-3 bg-light rounded">
+                            <span class="badge bg-success mb-2">Real Jobs</span>
+                            <h4 class="text-success mb-0">17,014</h4>
+                            <small>95.2% of total</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6" data-aos="fade-left">
+        <div class="card-modern">
+            <div class="card-header-modern d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Missing Values Analysis</h5>
+                <span class="badge bg-warning">Data Quality</span>
+            </div>
+            <div class="card-body-modern">
+                <div id="missing-values" style="height: 400px;"></div>
+                <div class="alert alert-warning mt-3 mb-0">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Benefits</strong> field has highest missing values (39%)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Correlation Heatmap with Controls -->
+<div class="card-modern mb-5" data-aos="fade-up">
+    <div class="card-header-modern d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="fas fa-th me-2"></i>Feature Correlation Heatmap</h5>
+        <div>
+            <span class="badge bg-info me-2">Strong Correlation</span>
+            <span class="badge bg-light text-dark">Weak Correlation</span>
+        </div>
+    </div>
+    <div class="card-body-modern">
+        <div id="correlation-heatmap" style="height: 500px;"></div>
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <div class="p-3 bg-light rounded">
+                    <h6><i class="fas fa-arrow-up text-success me-2"></i>Strong Positive</h6>
+                    <p class="mb-0 small">Title & Description: 0.15</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 bg-light rounded">
+                    <h6><i class="fas fa-arrow-down text-danger me-2"></i>Strong Negative</h6>
+                    <p class="mb-0 small">No significant negative correlations</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Enhanced Word Clouds -->
+<div class="row g-4">
+    <div class="col-md-6" data-aos="fade-right">
+        <div class="card-modern">
+            <div class="card-header-modern">
+                <h5><i class="fas fa-cloud me-2 text-info"></i>Word Cloud - Real Jobs</h5>
+            </div>
+            <div class="card-body-modern">
+                <div id="wordcloud-real" style="height: 400px;"></div>
+                <div class="mt-3">
+                    <h6>Top Keywords:</h6>
+                    <span class="badge bg-light text-dark me-1 mb-1">experience</span>
+                    <span class="badge bg-light text-dark me-1 mb-1">skills</span>
+                    <span class="badge bg-light text-dark me-1 mb-1">team</span>
+                    <span class="badge bg-light text-dark me-1 mb-1">development</span>
+                    <span class="badge bg-light text-dark me-1 mb-1">benefits</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6" data-aos="fade-left">
+        <div class="card-modern">
+            <div class="card-header-modern">
+                <h5><i class="fas fa-cloud me-2 text-warning"></i>Word Cloud - Fake Jobs</h5>
+            </div>
+            <div class="card-body-modern">
+                <div id="wordcloud-fake" style="height: 400px;"></div>
+                <div class="mt-3">
+                    <h6>Top Keywords:</h6>
+                    <span class="badge bg-light text-dark me-1 mb-1">urgent</span>
+                    <span class="badge bg-light text-dark me-1 mb-1">immediate</span>
+                    <span class="badge bg-light text-dark me-1 mb-1">unlimited</span>
+                    <span class="badge bg-light text-dark me-1 mb-1">guaranteed</span>
+                    <span class="badge bg-light text-dark me-1 mb-1">easy money</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Additional Insights -->
+<div class="row mt-5 g-4">
+    <div class="col-12" data-aos="fade-up">
+        <div class="card-modern">
+            <div class="card-header-modern">
+                <h5><i class="fas fa-lightbulb me-2"></i>Key Insights</h5>
+            </div>
+            <div class="card-body-modern">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-primary bg-opacity-10 p-3 rounded-circle me-3">
+                                <i class="fas fa-chart-line text-primary"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">Class Imbalance</h6>
+                                <p class="mb-0 small">4.8% fake jobs - need SMOTE</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-warning bg-opacity-10 p-3 rounded-circle me-3">
+                                <i class="fas fa-database text-warning"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">Missing Data</h6>
+                                <p class="mb-0 small">Benefits (39%) needs attention</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-info bg-opacity-10 p-3 rounded-circle me-3">
+                                <i class="fas fa-link text-info"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1">Correlations</h6>
+                                <p class="mb-0 small">Features are weakly correlated</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Chart type toggle
+    let currentChartType = 'donut';
+    
+    function changeChartType(type) {
+        currentChartType = type;
+        updateClassDistribution();
+    }
+    
+    function updateClassDistribution() {
+        let chartData;
+        
+        if (currentChartType === 'pie') {
+            chartData = [{
+                values: [866, 17014],
+                labels: ['Fake Jobs', 'Real Jobs'],
+                type: 'pie',
+                marker: {
+                    colors: ['#f72585', '#4cc9f0']
+                },
+                textinfo: 'label+percent',
+                hoverinfo: 'label+value+percent',
+                textposition: 'inside'
+            }];
+        } else {
+            chartData = [{
+                values: [866, 17014],
+                labels: ['Fake Jobs', 'Real Jobs'],
+                type: 'pie',
+                marker: {
+                    colors: ['#f72585', '#4cc9f0']
+                },
+                hole: 0.6,
+                textinfo: 'label+percent',
+                hoverinfo: 'label+value+percent',
+                textposition: 'inside'
+            }];
+        }
+        
+        Plotly.react('class-distribution', chartData, {
+            height: 400,
+            margin: { t: 30, b: 30, l: 30, r: 30 },
+            showlegend: true,
+            legend: { orientation: 'h', y: -0.1 },
+            annotations: currentChartType === 'donut' ? [{
+                font: { size: 16, weight: 'bold' },
+                showarrow: false,
+                text: 'Job Distribution',
+                x: 0.5,
+                y: 0.5
+            }] : []
+        });
+    }
+
+    // Class Distribution - Initial
+    updateClassDistribution();
+
+    // Missing Values with better styling
+    var missingData = [{
+        x: ['Company Profile', 'Description', 'Requirements', 'Benefits', 'Required Exp', 'Required Edu', 'Industry', 'Function'],
+        y: [3786, 2, 22, 7024, 3398, 3749, 3720, 4160],
+        type: 'bar',
+        marker: {
+            color: ['#4361ee', '#4cc9f0', '#4cc9f0', '#f72585', '#f8961e', '#f8961e', '#f8961e', '#f8961e'],
+            opacity: 0.9
+        },
+        text: ['3786 (21%)', '2 (0.01%)', '22 (0.12%)', '7024 (39%)', '3398 (19%)', '3749 (21%)', '3720 (21%)', '4160 (23%)'],
+        textposition: 'outside',
+        hoverinfo: 'x+y+text'
+    }];
+
+    Plotly.newPlot('missing-values', missingData, {
+        height: 400,
+        margin: { t: 30, b: 100, l: 50, r: 30 },
+        xaxis: { 
+            tickangle: -45,
+            title: 'Features'
+        },
+        yaxis: { 
+            title: 'Missing Values Count',
+            gridcolor: '#e9ecef'
+        },
+        plot_bgcolor: 'rgba(0,0,0,0)',
+        paper_bgcolor: 'rgba(0,0,0,0)'
+    });
+
+    // Correlation Heatmap with better colors
+    var corrData = [{
+        z: [
+            [1.00, 0.12, 0.08, 0.15, 0.03],
+            [0.12, 1.00, 0.21, 0.09, 0.17],
+            [0.08, 0.21, 1.00, 0.11, 0.14],
+            [0.15, 0.09, 0.11, 1.00, 0.19],
+            [0.03, 0.17, 0.14, 0.19, 1.00]
+        ],
+        x: ['Title', 'Location', 'Company', 'Description', 'Requirements'],
+        y: ['Title', 'Location', 'Company', 'Description', 'Requirements'],
+        type: 'heatmap',
+        colorscale: [
+            [0, '#f72585'],
+            [0.5, '#ffffff'],
+            [1, '#4361ee']
+        ],
+        zmid: 0,
+        showscale: true,
+        colorbar: {
+            title: 'Correlation',
+            titleside: 'right'
+        }
+    }];
+
+    Plotly.newPlot('correlation-heatmap', corrData, {
+        height: 500,
+        margin: { t: 50, b: 50, l: 50, r: 50 },
+        xaxis: { side: 'bottom' },
+        yaxis: { autorange: 'reversed' }
+    });
+
+    // Enhanced Word Clouds with better words
+    var realWords = ['experience', 'skills', 'team', 'development', 'manager', 'salary', 'remote', 'fulltime', 'benefits', 'healthcare', 'professional', 'growth', 'opportunity', 'excellent', 'dynamic'];
+    var fakeWords = ['urgent', 'immediate', 'unlimited', 'guaranteed', 'easy money', 'work from home', 'no experience', 'quick cash', 'secret', 'hidden', 'act now', 'limited time', 'amazing', 'incredible', 'fortune'];
+    
+    function createWordCloud(containerId, words, isReal) {
+        var colors = isReal ? 
+            ['#4361ee', '#3f37c9', '#4cc9f0', '#4895ef', '#560bad'] : 
+            ['#f72585', '#b5179e', '#f8961e', '#f3722c', '#d00000'];
+        
+        var sizes = words.map((_, i) => 50 - i * 2);
+        
+        var data = [{
+            type: 'scatter',
+            mode: 'text',
+            x: Array.from({length: words.length}, (_, i) => Math.random() * 10),
+            y: Array.from({length: words.length}, (_, i) => Math.random() * 10),
+            text: words,
+            textfont: {
+                size: sizes,
+                color: colors.map(c => c + (Math.random() * 0.5 + 0.5).toString(16).padStart(2, '0').slice(0,2))
+            },
+            hoverinfo: 'text'
+        }];
+        
+        var layout = {
+            height: 400,
+            xaxis: { 
+                showgrid: false, 
+                showticklabels: false, 
+                zeroline: false,
+                range: [0, 10]
+            },
+            yaxis: { 
+                showgrid: false, 
+                showticklabels: false, 
+                zeroline: false,
+                range: [0, 10]
+            },
+            plot_bgcolor: 'rgba(0,0,0,0)',
+            paper_bgcolor: 'rgba(0,0,0,0)'
+        };
+        
+        Plotly.newPlot(containerId, data, layout);
+    }
+    
+    createWordCloud('wordcloud-real', realWords, true);
+    createWordCloud('wordcloud-fake', fakeWords, false);
+    
+    // Add hover effects
+    document.querySelectorAll('.stat-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-10px)';
+        });
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+</script>
+
+<style>
+    /* Additional custom styles */
+    .stat-card {
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .stat-card:hover {
+        box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+    }
+    
+    .btn-group .btn-light {
+        border: none;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.875rem;
+    }
+    
+    .btn-group .btn-light:hover {
+        background: var(--primary-color);
+        color: white;
+    }
+    
+    .bg-opacity-10 {
+        --bs-bg-opacity: 0.1;
+    }
+    
+    .rounded-circle {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">NLP Analysis</h1>
+        <p class="lead">Natural Language Processing techniques applied to job descriptions.</p>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Text Preprocessing Pipeline</h5>
+            </div>
+            <div class="card-body">
+                <div class="pipeline">
+                    <div class="step">1. Tokenization</div>
+                    <div class="arrow">→</div>
+                    <div class="step">2. Lowercasing</div>
+                    <div class="arrow">→</div>
+                    <div class="step">3. Stopword Removal</div>
+                    <div class="arrow">→</div>
+                    <div class="step">4. Lemmatization</div>
+                    <div class="arrow">→</div>
+                    <div class="step">5. Vectorization</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>TF-IDF Vectorization</h5>
+            </div>
+            <div class="card-body">
+                <p>Term Frequency-Inverse Document Frequency transformation applied to text data.</p>
+                <div id="tfidf-chart"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Sentiment Analysis</h5>
+            </div>
+            <div class="card-body">
+                <div id="sentiment-chart"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Named Entity Recognition Example</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Sample Text:</strong> "We are looking for a software engineer at Google in New York."</p>
+                <p><strong>Entities:</strong></p>
+                <ul>
+                    <li><span class="badge bg-primary">Google</span> - Organization</li>
+                    <li><span class="badge bg-success">New York</span> - Location</li>
+                    <li><span class="badge bg-info">software engineer</span> - Job Title</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Readability Scores</h5>
+            </div>
+            <div class="card-body">
+                <div id="readability-chart"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5>Linguistic Patterns</h5>
+            </div>
+            <div class="card-body">
+                <div id="linguistic-chart"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // TF-IDF chart (placeholder)
+    var tfidfData = [{
+        x: ['word1', 'word2', 'word3', 'word4', 'word5'],
+        y: [0.8, 0.6, 0.4, 0.3, 0.2],
+        type: 'bar'
+    }];
+
+    Plotly.newPlot('tfidf-chart', tfidfData);
+
+    // Sentiment chart (placeholder)
+    var sentimentData = [{
+        labels: ['Positive', 'Negative', 'Neutral'],
+        values: [40, 30, 30],
+        type: 'pie'
+    }];
+
+    Plotly.newPlot('sentiment-chart', sentimentData);
+
+    // Readability chart (placeholder)
+    var readabilityData = [{
+        x: ['Fake Jobs', 'Real Jobs'],
+        y: [50, 70],
+        type: 'bar'
+    }];
+
+    Plotly.newPlot('readability-chart', readabilityData);
+
+    // Linguistic chart (placeholder)
+    var linguisticData = [{
+        x: ['Exclamation', 'Question', 'Capitalization'],
+        y: [20, 15, 10],
+        type: 'bar'
+    }];
+
+    Plotly.newPlot('linguistic-chart', linguisticData);
+</script>
+{% endblock %}
