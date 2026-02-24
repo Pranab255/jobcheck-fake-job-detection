@@ -369,7 +369,7 @@
 </head>
 <body>
     <!-- Modern Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-modern sticky-top">
+   <nav class="navbar navbar-expand-lg navbar-modern sticky-top">
         <div class="container">
             <a class="navbar-brand" href="{{ url_for('index') }}">
                 <i class="fas fa-robot me-2"></i>JobCheck AI
@@ -404,6 +404,18 @@
                             <i class="fas fa-search"></i> Prediction
                         </a>
                     </li>
+                    
+                    <!-- ===== ADMIN LINK ADDED HERE ===== -->
+                    {% if current_user.is_authenticated and current_user.is_admin %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint and 'admin' in request.endpoint %}active{% endif %}" 
+                           href="{{ url_for('admin_dashboard') }}">
+                            <i class="fas fa-crown text-warning"></i> Admin
+                        </a>
+                    </li>
+                    {% endif %}
+                    <!-- ===== END OF ADMIN LINK ===== -->
+                    
                 </ul>
                 <ul class="navbar-nav ms-3">
                     {% if current_user.is_authenticated %}
@@ -433,7 +445,6 @@
             </div>
         </div>
     </nav>
-
     <!-- Main Content -->
     <main class="main-container">
         {% with messages = get_flashed_messages(with_categories=true) %}

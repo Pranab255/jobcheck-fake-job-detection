@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header" data-aos="fade-down">
+    <h1><i class="fas fa-chart-line me-3"></i>Analytics Dashboard</h1>
+    <p>Comprehensive analytics and insights about your application</p>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6" data-aos="fade-right">
+        <div class="card-modern">
+            <div class="card-header-modern">
+                <h5><i class="fas fa-chart-bar me-2"></i>User Growth</h5>
+            </div>
+            <div class="card-body-modern">
+                <div id="user-growth-chart" style="height: 300px;"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6" data-aos="fade-left">
+        <div class="card-modern">
+            <div class="card-header-modern">
+                <h5><i class="fas fa-chart-pie me-2"></i>User Distribution</h5>
+            </div>
+            <div class="card-body-modern">
+                <div id="user-distribution-chart" style="height: 300px;"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-12" data-aos="fade-up">
+        <div class="card-modern">
+            <div class="card-header-modern">
+                <h5><i class="fas fa-chart-line me-2"></i>Prediction Trends</h5>
+            </div>
+            <div class="card-body-modern">
+                <div id="prediction-trends-chart" style="height: 400px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+<script>
+// User Growth Chart
+var growthData = [{
+    x: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    y: [10, 15, 22, 28, 35, 42],
+    type: 'scatter',
+    mode: 'lines+markers',
+    name: 'Users',
+    line: { color: '#4361ee', width: 3 }
+}];
+
+Plotly.newPlot('user-growth-chart', growthData, {
+    height: 300,
+    margin: { t: 30, b: 40, l: 50, r: 30 }
+});
+
+// User Distribution Chart
+var distData = [{
+    values: [{{ users|selectattr('is_admin')|list|length }}, {{ users|length - users|selectattr('is_admin')|list|length }}],
+    labels: ['Admins', 'Regular Users'],
+    type: 'pie',
+    marker: {
+        colors: ['#f72585', '#4361ee']
+    },
+    hole: 0.4
+}];
+
+Plotly.newPlot('user-distribution-chart', distData, {
+    height: 300,
+    margin: { t: 30, b: 30, l: 30, r: 30 },
+    showlegend: true
+});
+
+// Prediction Trends Chart
+var trendData = [{
+    x: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7', 'Week 8'],
+    y: [45, 52, 38, 65, 58, 72, 68, 84],
+    type: 'bar',
+    name: 'Total Predictions',
+    marker: { color: '#4cc9f0' }
+}, {
+    x: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6', 'Week 7', 'Week 8'],
+    y: [8, 12, 6, 15, 10, 18, 14, 22],
+    type: 'bar',
+    name: 'Fake Detected',
+    marker: { color: '#f72585' }
+}];
+
+Plotly.newPlot('prediction-trends-chart', trendData, {
+    height: 400,
+    margin: { t: 30, b: 50, l: 50, r: 30 },
+    barmode: 'group'
+});
+</script>
+{% endblock %}

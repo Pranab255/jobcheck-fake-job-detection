@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page-header" data-aos="fade-down">
+    <h1><i class="fas fa-user-circle me-3"></i>User Details</h1>
+    <p>View and manage user information</p>
+</div>
+
+<div class="row">
+    <div class="col-md-4" data-aos="fade-right">
+        <div class="card-modern">
+            <div class="card-body-modern text-center">
+                <div class="display-1 mb-3">
+                    <i class="fas fa-user-circle text-primary"></i>
+                </div>
+                <h3>{{ user.username }}</h3>
+                <p class="text-muted">{{ user.email }}</p>
+                
+                <div class="mb-3">
+                    {% if user.get('is_admin', False) %}
+                    <span class="badge bg-danger fs-6 p-3">
+                        <i class="fas fa-crown me-2"></i>Admin User
+                    </span>
+                    {% else %}
+                    <span class="badge bg-info fs-6 p-3">
+                        <i class="fas fa-user me-2"></i>Regular User
+                    </span>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    <small class="text-muted">Member since</small><br>
+                    <strong>{{ user.created_at if user.created_at else 'Unknown' }}</strong>
+                </div>
+                
+                <div class="btn-group w-100">
+                    {% if user_id != current_user.id %}
+                    <button class="btn btn-warning" onclick="toggleAdmin('{{ user_id }}')">
+                        <i class="fas fa-user-tag me-2"></i>
+                        {% if user.get('is_admin', False) %}Remove Admin{% else %}Make Admin{% endif %}
+                    </button>
+                    <button class="btn btn-danger" onclick="deleteUser('{{ user_id }}', '{{ user.username }}')">
+                        <i class="fas fa-trash me-2"></i>Delete
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8" data-aos="fade-left">
+        <div class="card-modern">
+            <div class="card-header-modern">
+                <h5><i class="fas fa-activity me-2"></i>User Activity</h5>
+            </div>
+            <div class="card-body-modern">
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-badge bg-success">
+                            <i class="fas fa-sign-in-alt"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h6>Last Login</h6>
+                            <p class="text-muted mb-1">Today at 10:30 AM</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-badge bg-primary">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h6>Performed 25 predictions</h6>
+                            <p class="text-muted mb-1">This week</p>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-badge bg-info">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h6>Account Created</h6>
+                            <p class="text-muted mb-1">{{ user.created_at if user.created_at else 'N/A' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.timeline {
+    position: relative;
+    padding: 10px 0;
+}
+
+.timeline-item {
+    position: relative;
+    padding-left: 50px;
+    margin-bottom: 25px;
+}
+
+.timeline-badge {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.timeline-content {
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.timeline-item:last-child .timeline-content {
+    border-bottom: none;
+}
+</style>
+
+<script>
+function toggleAdmin(userId) {
+    if (!confirm('Are you sure you want to toggle admin status for this user?')) {
+        return;
+    }
+    
+    fetch(`/admin/user/${userId}/toggle-admin`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('User role updated successfully!');
+            location.reload();
+        } else {
+            alert('Error: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to update user role');
+    });
+}
+
+function deleteUser(userId, username) {
+    if (!confirm(`Are you sure you want to delete user "${username}"? This action cannot be undone.`)) {
+        return;
+    }
+    
+    fetch(`/admin/user/${userId}/delete`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('User deleted successfully!');
+            window.location.href = "{{ url_for('admin_users') }}";
+        } else {
+            alert('Error: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Failed to delete user');
+    });
+}
+</script>
+{% endblock %}
